@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank of Kigali - Financially Transforming Lives</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bk: {
+                            navy: '#002B49',
+                            blue: '#00529B',
+                            lightBlue: '#EBF3FA',
+                            sky: '#F0F7FF',
+                            yellow: '#FFC72C',
+                            gold: '#F2A900',
+                            grayBg: '#FFFFFF',
+                            cardBg: '#FFFFFF',
+                            accent: '#00529B'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FFFFFF;
+            color: #1E293B;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(219, 234, 254, 0.9);
+        }
+
+        .bk-gradient {
+            background: linear-gradient(135deg, #FFFFFF 0%, #F0F7FF 100%);
+        }
+
+        .card-shimmer {
+            background: linear-gradient(135deg, #002B49 0%, #00529B 60%, #003366 100%);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Toast animation */
+        @keyframes slideIn {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .toast-animate {
+            animation: slideIn 0.3s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-white text-slate-800 antialiased min-h-screen flex flex-col justify-between custom-scrollbar">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3 max-w-sm w-full pointer-events-none"></div>
+
+    <header class="sticky top-0 z-40 bg-white text-slate-800 shadow-xs border-b border-blue-100">
+        <!-- Top Utility Bar -->
+        <div class="bg-blue-50 text-xs py-1.5 px-4 sm:px-8 border-b border-blue-100 text-bk-navy">
+            <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+                <div class="flex items-center gap-4">
+                    <span class="inline-flex items-center gap-1 text-slate-700">
+                        <i class="fas fa-phone-alt text-bk-blue"></i> 4455 (Toll Free)
+                    </span>
+                    <span class="hidden md:inline-flex items-center gap-1 text-slate-700">
+                        <i class="fas fa-envelope text-bk-blue"></i> bk@bk.rw
+                    </span>
+                    <span class="hidden sm:inline-flex items-center gap-1 text-slate-700">
+                        <i class="fas fa-map-marker-alt text-bk-blue"></i> Kigali, Rwanda
+                    </span>
+                </div>
+                <div class="flex items-center gap-4 ml-auto">
+                    <!-- Dynamic Language Selector -->
+                    <div class="flex items-center gap-1 bg-white border border-blue-200 rounded px-2 py-0.5">
+                        <i class="fas fa-globe text-bk-blue text-xs"></i>
+                        <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-transparent text-xs text-slate-800 border-none focus:outline-none cursor-pointer font-medium">
+                            <option value="en" class="text-gray-900" selected>English</option>
+                            <option value="rw" class="text-gray-900">Kinyarwanda</option>
+                            <option value="fr" class="text-gray-900">Français</option>
+                        </select>
+                    </div>
+
+                    <!-- Simulator Mode Switcher -->
+                    <div class="flex items-center gap-1 bg-bk-blue text-white text-xs font-semibold px-2.5 py-1 rounded shadow-xs">
+                        <i class="fas fa-sliders text-bk-yellow"></i>
+                        <span id="label-mode">Retail Banking</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Navbar -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-8 py-3.5 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <div class="flex items-center gap-3 cursor-pointer" onclick="scrollToSection('hero')">
+                <div class="w-10 h-10 bg-bk-blue text-white rounded-lg flex items-center justify-center font-extrabold text-xl shadow-md border-2 border-white">
+                    BK
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-lg leading-none tracking-tight text-bk-navy flex items-center gap-1">
+                        Bank of Kigali
+                    </h1>
+                    <span class="text-[10px] text-bk-blue tracking-widest uppercase font-semibold">Financially Transforming Lives</span>
+                </div>
+            </div>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden lg:flex items-center gap-6 font-semibold text-sm text-slate-700">
+                <a href="#hero" class="hover:text-bk-blue transition-colors" data-i18n="nav-home">Home</a>
+                <a href="#dashboard-section" class="hover:text-bk-blue transition-colors" data-i18n="nav-dashboard">Internet Banking</a>
+                <a href="#calculators" class="hover:text-bk-blue transition-colors" data-i18n="nav-calculators">Calculators</a>
+                <a href="#services" class="hover:text-bk-blue transition-colors" data-i18n="nav-services">Products & Services</a>
+                <a href="#contact" class="hover:text-bk-blue transition-colors" data-i18n="nav-contact">Contact & Branch Locator</a>
+            </nav>
+
+            <!-- Action Buttons -->
+            <div class="hidden sm:flex items-center gap-3">
+                <button onclick="scrollToSection('dashboard-section')" class="bg-bk-blue hover:bg-bk-navy text-white font-bold px-4 py-2 rounded-lg text-sm shadow-md transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
+                    <i class="fas fa-lock text-bk-yellow"></i>
+                    <span data-i18n="btn-login">BK Internet Banking</span>
+                </button>
+            </div>
+
+            <!-- Mobile Hamburger Toggle -->
+            <button onclick="toggleMobileNav()" class="lg:hidden text-bk-navy p-2 text-xl focus:outline-none">
+                <i class="fas fa-bars" id="mobile-menu-icon"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Navigation Drawer -->
+        <div id="mobile-drawer" class="hidden lg:hidden bg-white border-t border-blue-100 px-6 py-4 space-y-3 transition-all">
+            <a href="#hero" onclick="toggleMobileNav()" class="block text-slate-800 font-medium hover:text-bk-blue py-2 border-b border-blue-50" data-i18n="nav-home">Home</a>
+            <a href="#dashboard-section" onclick="toggleMobileNav()" class="block text-slate-800 font-medium hover:text-bk-blue py-2 border-b border-blue-50" data-i18n="nav-dashboard">Internet Banking Simulator</a>
+            <a href="#calculators" onclick="toggleMobileNav()" class="block text-slate-800 font-medium hover:text-bk-blue py-2 border-b border-blue-50" data-i18n="nav-calculators">Calculators</a>
+            <a href="#services" onclick="toggleMobileNav()" class="block text-slate-800 font-medium hover:text-bk-blue py-2 border-b border-blue-50" data-i18n="nav-services">Products & Services</a>
+            <a href="#contact" onclick="toggleMobileNav()" class="block text-slate-800 font-medium hover:text-bk-blue py-2" data-i18n="nav-contact">Contact</a>
+            <div class="pt-2">
+                <button onclick="scrollToSection('dashboard-section'); toggleMobileNav();" class="w-full bg-bk-blue text-white font-bold py-2.5 rounded-lg shadow text-center">
+                    <i class="fas fa-user-lock mr-1 text-bk-yellow"></i> Quick Demo Login
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <section id="hero" class="bg-gradient-to-b from-blue-50/70 via-white to-white text-slate-800 py-12 lg:py-16 px-4 sm:px-8 relative overflow-hidden border-b border-blue-50">
+            <!-- Background Decorative Elements -->
+            <div class="absolute -right-16 -top-16 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -left-16 -bottom-16 w-96 h-96 bg-blue-300/20 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+                <!-- Hero Content -->
+                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 bg-blue-100/80 text-bk-blue px-3.5 py-1.5 rounded-full border border-blue-200 text-xs sm:text-sm font-semibold">
+                        <span class="w-2 h-2 rounded-full bg-bk-blue animate-pulse"></span>
+                        <span data-i18n="hero-tag">Rwanda's Leading Financial Partner</span>
+                    </div>
+
+                    <h1 class="text-3xl sm:text-5xl font-extrabold leading-tight text-bk-navy tracking-tight">
+                        <span data-i18n="hero-title">Banking Made Simple, Fast & Secure</span>
+                    </h1>
+
+                    <p class="text-slate-600 text-base sm:text-lg max-w-2xl leading-relaxed" data-i18n="hero-desc">
+                        Manage your accounts, transfer money instantly across Rwanda via BK Quick or Mobile Money (MTN MoMo & Airtel Money), pay utilities, and apply for digital loans seamlessly.
+                    </p>
+
+                    <!-- Feature Badges -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+                        <div class="bg-white p-3.5 rounded-xl border border-blue-100 shadow-sm text-center">
+                            <i class="fas fa-mobile-alt text-2xl text-bk-blue mb-1"></i>
+                            <div class="text-xs font-bold text-slate-800" data-i18n="hero-f1">BK Mobile App</div>
+                        </div>
+                        <div class="bg-white p-3.5 rounded-xl border border-blue-100 shadow-sm text-center">
+                            <i class="fas fa-bolt text-2xl text-bk-blue mb-1"></i>
+                            <div class="text-xs font-bold text-slate-800" data-i18n="hero-f2">BK Quick Loans</div>
+                        </div>
+                        <div class="bg-white p-3.5 rounded-xl border border-blue-100 shadow-sm text-center">
+                            <i class="fas fa-wallet text-2xl text-bk-blue mb-1"></i>
+                            <div class="text-xs font-bold text-slate-800" data-i18n="hero-f3">MoMo & Airtel Link</div>
+                        </div>
+                        <div class="bg-white p-3.5 rounded-xl border border-blue-100 shadow-sm text-center">
+                            <i class="fas fa-shield-alt text-2xl text-bk-blue mb-1"></i>
+                            <div class="text-xs font-bold text-slate-800" data-i18n="hero-f4">256-bit Security</div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4">
+                        <button onclick="scrollToSection('dashboard-section')" class="bg-bk-blue hover:bg-bk-navy text-white font-bold px-6 py-3.5 rounded-xl shadow-lg transition transform hover:-translate-y-0.5 flex items-center gap-2">
+                            <i class="fas fa-laptop-code text-bk-yellow"></i>
+                            <span data-i18n="hero-btn-demo">Launch Interactive Simulator</span>
+                        </button>
+                        <button onclick="scrollToSection('calculators')" class="bg-white hover:bg-blue-50 text-bk-blue font-bold px-6 py-3.5 rounded-xl border border-blue-200 shadow-sm transition flex items-center gap-2">
+                            <i class="fas fa-calculator"></i>
+                            <span data-i18n="hero-btn-calc">Explore Loan Calculator</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Currency Converter Widget Card -->
+                <div class="lg:col-span-5">
+                    <div class="bg-white text-gray-800 rounded-2xl shadow-xl p-6 border border-blue-100">
+                        <div class="flex items-center justify-between pb-4 mb-4 border-b border-gray-100">
+                            <h3 class="font-bold text-bk-navy flex items-center gap-2">
+                                <i class="fas fa-exchange-alt text-bk-blue"></i>
+                                <span data-i18n="fx-title">BK Forex Rate Converter</span>
+                            </h3>
+                            <span class="text-xs bg-green-100 text-green-700 px-2.5 py-1 rounded-full font-bold">Live Rates</span>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1" data-i18n="fx-amount">Amount in Rwandan Francs (RWF)</label>
+                                <div class="relative">
+                                    <input type="number" id="fx-amount" value="100000" oninput="calculateFX()" class="w-full pl-3 pr-16 py-2.5 bg-blue-50/30 border border-blue-200 rounded-lg text-gray-900 font-semibold focus:ring-2 focus:ring-bk-blue focus:outline-none">
+                                    <span class="absolute right-3 top-2.5 text-xs font-bold text-bk-blue">RWF</span>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-2 py-2 text-center text-xs">
+                                <div class="bg-blue-50/60 p-2.5 rounded-lg border border-blue-100">
+                                    <span class="text-slate-500 font-medium block">USD</span>
+                                    <span id="fx-usd" class="font-bold text-bk-blue text-sm">$ 73.53</span>
+                                    <span class="text-[10px] text-slate-400 block mt-1">1 USD = 1,360 RWF</span>
+                                </div>
+                                <div class="bg-blue-50/60 p-2.5 rounded-lg border border-blue-100">
+                                    <span class="text-slate-500 font-medium block">EUR</span>
+                                    <span id="fx-eur" class="font-bold text-bk-blue text-sm">€ 67.57</span>
+                                    <span class="text-[10px] text-slate-400 block mt-1">1 EUR = 1,480 RWF</span>
+                                </div>
+                                <div class="bg-blue-50/60 p-2.5 rounded-lg border border-blue-100">
+                                    <span class="text-slate-500 font-medium block">GBP</span>
+                                    <span id="fx-gbp" class="font-bold text-bk-blue text-sm">£ 57.14</span>
+                                    <span class="text-[10px] text-slate-400 block mt-1">1 GBP = 1,750 RWF</span>
+                                </div>
+                            </div>
+
+                            <div class="p-3 bg-slate-50 rounded-lg text-xs text-slate-600 flex justify-between items-center border border-slate-100">
+                                <span><i class="fas fa-info-circle text-bk-blue mr-1"></i> Spot Rate Indicative</span>
+                                <span class="text-slate-400 font-medium">Updated Today</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="dashboard-section" class="py-12 px-4 sm:px-8 max-w-7xl mx-auto">
+            <div class="mb-8 text-center md:text-left flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <span class="text-bk-blue font-bold text-xs uppercase tracking-wider bg-blue-100/70 px-3 py-1 rounded-full border border-blue-200" data-i18n="dash-badge">Interactive Banking Portal</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-bk-navy mt-2" data-i18n="dash-heading">Bank of Kigali Online Customer Portal</h2>
+                </div>
+                <div class="flex items-center gap-2 self-center md:self-auto bg-white p-1 rounded-xl shadow-sm border border-blue-200 text-xs">
+                    <button onclick="setAccountType('retail')" id="btn-acc-retail" class="px-3.5 py-1.5 rounded-lg font-bold bg-bk-blue text-white shadow-xs transition-all">Retail Customer</button>
+                    <button onclick="setAccountType('corporate')" id="btn-acc-corp" class="px-3.5 py-1.5 rounded-lg font-semibold text-slate-600 hover:bg-blue-50 transition-all">Corporate Enterprise</button>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-xl border border-blue-100 overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[600px]">
+                
+                <!-- Dashboard Sidebar Navigation -->
+                <div class="lg:col-span-3 bg-blue-50/80 border-r border-blue-100 p-6 flex flex-col justify-between">
+                    <div class="space-y-6">
+                        <!-- User Profile Info -->
+                        <div class="flex items-center gap-3 border-b border-blue-200/60 pb-5">
+                            <div class="w-12 h-12 rounded-full bg-bk-blue text-white font-extrabold flex items-center justify-center text-lg shadow-sm border-2 border-white">
+                                JM
+                            </div>
+                            <div>
+                                <h3 id="dash-user-name" class="font-bold text-sm text-bk-navy">Jean-Paul Mugisha</h3>
+                                <p id="dash-user-acc" class="text-xs text-bk-blue font-mono font-semibold">Acc: 00012-083746-01</p>
+                                <span class="inline-block mt-1 text-[10px] bg-green-100 text-green-700 border border-green-200 px-2 py-0.5 rounded font-semibold">Verified Active</span>
+                            </div>
+                        </div>
+
+                        <!-- Menu Tabs -->
+                        <nav class="space-y-1.5">
+                            <button onclick="switchTab('tab-overview')" id="nav-tab-overview" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm transition bg-bk-blue text-white shadow-md">
+                                <i class="fas fa-chart-pie text-base"></i>
+                                <span data-i18n="tab-overview">Account Overview</span>
+                            </button>
+                            <button onclick="switchTab('tab-transfers')" id="nav-tab-transfers" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm text-slate-600 hover:bg-white hover:text-bk-blue transition">
+                                <i class="fas fa-paper-plane text-base"></i>
+                                <span data-i18n="tab-transfers">Transfer & Pay</span>
+                            </button>
+                            <button onclick="switchTab('tab-bills')" id="nav-tab-bills" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm text-slate-600 hover:bg-white hover:text-bk-blue transition">
+                                <i class="fas fa-file-invoice-dollar text-base"></i>
+                                <span data-i18n="tab-bills">Utilities & EUCL</span>
+                            </button>
+                            <button onclick="switchTab('tab-cards')" id="nav-tab-cards" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm text-slate-600 hover:bg-white hover:text-bk-blue transition">
+                                <i class="fas fa-credit-card text-base"></i>
+                                <span data-i18n="tab-cards">My Cards & BK Quick</span>
+                            </button>
+                        </nav>
+                    </div>
+
+                    <div class="pt-6 border-t border-blue-200/60">
+                        <button onclick="resetDemoData()" class="w-full py-2.5 bg-white hover:bg-blue-100 text-xs text-bk-blue font-bold rounded-xl border border-blue-200 transition flex items-center justify-center gap-2 shadow-xs">
+                            <i class="fas fa-redo-alt"></i> Reset Simulator Data
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Dashboard Content Area -->
+                <div class="lg:col-span-9 p-6 bg-white flex flex-col justify-between">
+                    
+                    <!-- TAB 1: OVERVIEW -->
+                    <div id="tab-overview" class="space-y-6">
+                        <!-- Balance Cards Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Savings Account Card -->
+                            <div class="bg-gradient-to-br from-bk-navy to-bk-blue text-white rounded-xl p-5 shadow-md relative overflow-hidden">
+                                <div class="absolute right-3 top-3 text-white/10 text-6xl">
+                                    <i class="fas fa-piggy-bank"></i>
+                                </div>
+                                <div class="text-xs text-bk-yellow uppercase tracking-wider font-semibold">BK Savings Account</div>
+                                <div class="text-2xl sm:text-3xl font-extrabold my-2 font-mono" id="bal-savings">3,450,000 RWF</div>
+                                <div class="flex justify-between items-center text-xs text-slate-200 pt-2 border-t border-white/10">
+                                    <span>Available Balance</span>
+                                    <span class="bg-green-400/20 text-green-300 px-2 py-0.5 rounded font-medium">+4.5% p.a Interest</span>
+                                </div>
+                            </div>
+
+                            <!-- Checking / Current Account Card -->
+                            <div class="bg-white rounded-xl p-5 shadow-sm border border-blue-200 relative overflow-hidden">
+                                <div class="absolute right-3 top-3 text-blue-100/60 text-6xl">
+                                    <i class="fas fa-wallet"></i>
+                                </div>
+                                <div class="text-xs text-slate-500 uppercase tracking-wider font-semibold">BK Checking Account</div>
+                                <div class="text-2xl sm:text-3xl font-extrabold my-2 font-mono text-bk-navy" id="bal-checking">820,500 RWF</div>
+                                <div class="flex justify-between items-center text-xs text-slate-500 pt-2 border-t border-slate-100">
+                                    <span>Active Account</span>
+                                    <button onclick="openDepositModal()" class="text-bk-blue font-bold hover:underline flex items-center gap-1">
+                                        <i class="fas fa-plus-circle"></i> Add Funds
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Action Row -->
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                            <button onclick="switchTab('tab-transfers')" class="p-3 bg-white hover:bg-blue-50 border border-blue-100 rounded-xl text-center shadow-xs transition">
+                                <i class="fas fa-paper-plane text-bk-blue text-lg mb-1"></i>
+                                <div class="text-xs font-semibold text-slate-800">Send Money</div>
+                            </button>
+                            <button onclick="switchTab('tab-bills')" class="p-3 bg-white hover:bg-blue-50 border border-blue-100 rounded-xl text-center shadow-xs transition">
+                                <i class="fas fa-bolt text-bk-blue text-lg mb-1"></i>
+                                <div class="text-xs font-semibold text-slate-800">EUCL Tokens</div>
+                            </button>
+                            <button onclick="openDepositModal()" class="p-3 bg-white hover:bg-blue-50 border border-blue-100 rounded-xl text-center shadow-xs transition">
+                                <i class="fas fa-arrow-down text-green-600 text-lg mb-1"></i>
+                                <div class="text-xs font-semibold text-slate-800">Simulate Deposit</div>
+                            </button>
+                            <button onclick="switchTab('tab-cards')" class="p-3 bg-white hover:bg-blue-50 border border-blue-100 rounded-xl text-center shadow-xs transition">
+                                <i class="fas fa-mobile-alt text-bk-blue text-lg mb-1"></i>
+                                <div class="text-xs font-semibold text-slate-800">BK Quick Loan</div>
+                            </button>
+                        </div>
+
+                        <!-- Recent Transactions -->
+                        <div class="bg-white rounded-xl shadow-xs border border-blue-100 p-5">
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
+                                <h4 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                                    <i class="fas fa-list-ul text-bk-blue"></i> Recent Transaction History
+                                </h4>
+                                <!-- Filter Pills -->
+                                <div class="flex gap-1 bg-blue-50/60 p-1 rounded-lg text-xs border border-blue-100">
+                                    <button onclick="filterTx('all')" id="tx-filter-all" class="px-2.5 py-1 rounded-md font-semibold bg-white shadow-xs text-bk-blue">All</button>
+                                    <button onclick="filterTx('income')" id="tx-filter-income" class="px-2.5 py-1 rounded-md font-semibold text-slate-600 hover:text-bk-blue">Income</button>
+                                    <button onclick="filterTx('expense')" id="tx-filter-expense" class="px-2.5 py-1 rounded-md font-semibold text-slate-600 hover:text-bk-blue">Expenses</button>
+                                </div>
+                            </div>
+
+                            <div class="divide-y divide-slate-100 max-h-64 overflow-y-auto custom-scrollbar" id="tx-list">
+                                <!-- Dynamic Transactions JavaScript populates here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 2: TRANSFERS -->
+                    <div id="tab-transfers" class="hidden space-y-6">
+                        <div class="bg-white rounded-xl shadow-xs border border-blue-100 p-6">
+                            <h3 class="font-bold text-slate-800 text-base mb-4 flex items-center gap-2">
+                                <i class="fas fa-exchange-alt text-bk-blue"></i> Money Transfer Portal
+                            </h3>
+
+                            <form onsubmit="handleTransferSubmit(event)" class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Transfer Type</label>
+                                    <div class="grid grid-cols-3 gap-2">
+                                        <label class="border rounded-lg p-3 text-center cursor-pointer hover:bg-blue-50 transition border-bk-blue bg-blue-50/50 flex flex-col items-center">
+                                            <input type="radio" name="transferType" value="BK" checked class="hidden" onchange="updateTransferUI()">
+                                            <i class="fas fa-university text-bk-blue mb-1"></i>
+                                            <span class="text-xs font-bold text-bk-blue">BK to BK Account</span>
+                                        </label>
+                                        <label class="border rounded-lg p-3 text-center cursor-pointer hover:bg-blue-50 transition border-slate-200 flex flex-col items-center">
+                                            <input type="radio" name="transferType" value="MoMo" class="hidden" onchange="updateTransferUI()">
+                                            <i class="fas fa-mobile-alt text-amber-600 mb-1"></i>
+                                            <span class="text-xs font-bold text-slate-700">MTN MoMo</span>
+                                        </label>
+                                        <label class="border rounded-lg p-3 text-center cursor-pointer hover:bg-blue-50 transition border-slate-200 flex flex-col items-center">
+                                            <input type="radio" name="transferType" value="Airtel" class="hidden" onchange="updateTransferUI()">
+                                            <i class="fas fa-wifi text-red-600 mb-1"></i>
+                                            <span class="text-xs font-bold text-slate-700">Airtel Money</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-600 mb-1">From Account</label>
+                                        <select id="transfer-from" class="w-full p-2.5 bg-blue-50/30 border border-blue-200 rounded-lg text-sm focus:ring-2 focus:ring-bk-blue font-medium">
+                                            <option value="checking">Checking Account (820,500 RWF)</option>
+                                            <option value="savings">Savings Account (3,450,000 RWF)</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label id="lbl-transfer-target" class="block text-xs font-semibold text-slate-600 mb-1">Recipient BK Account Number</label>
+                                        <input type="text" id="transfer-target" placeholder="00012-987654-02" required class="w-full p-2.5 bg-blue-50/30 border border-blue-200 rounded-lg text-sm focus:ring-2 focus:ring-bk-blue font-mono">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-600 mb-1">Amount (RWF)</label>
+                                        <input type="number" id="transfer-amount" placeholder="e.g. 25000" min="100" max="5000000" required class="w-full p-2.5 bg-blue-50/30 border border-blue-200 rounded-lg text-sm focus:ring-2 focus:ring-bk-blue font-semibold">
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-600 mb-1">Payment Reference / Reason</label>
+                                        <input type="text" id="transfer-ref" placeholder="Rent, Supplies, School fees..." class="w-full p-2.5 bg-blue-50/30 border border-blue-200 rounded-lg text-sm focus:ring-2 focus:ring-bk-blue">
+                                    </div>
+                                </div>
+
+                                <div class="pt-3">
+                                    <button type="submit" class="w-full bg-bk-blue hover:bg-bk-navy text-white font-bold py-3 rounded-lg shadow transition flex justify-center items-center gap-2">
+                                        <i class="fas fa-lock text-bk-yellow"></i> Authorize & Execute Transfer
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- TAB 3: BILL UTILITIES -->
+                    <div id="tab-bills" class="hidden space-y-6">
+                        <div class="bg-white rounded-xl shadow-xs border border-blue-100 p-6">
+                            <h3 class="font-bold text-slate-800 text-base mb-4 flex items-center gap-2">
+                                <i class="fas fa-lightbulb text-bk-blue"></i> Utility Payment Portal (EUCL & WASAC)
+                            </h3>
+
+                            <form onsubmit="handleBillSubmit(event)" class="space-y-4">
+                                <div class="grid grid-cols-2 gap-3">
+                                    <label class="border rounded-xl p-4 cursor-pointer hover:border-bk-blue transition flex items-center gap-3 border-bk-blue bg-blue-50/40">
+                                        <input type="radio" name="utilityType" value="EUCL" checked class="hidden" onchange="updateUtilityUI()">
+                                        <div class="w-10 h-10 rounded-full bg-blue-100 text-bk-blue flex items-center justify-center font-bold text-lg">
+                                            ⚡
+                                        </div>
+                                        <div>
+                                            <div class="font-bold text-sm text-slate-800">EUCL Electricity</div>
+                                            <div class="text-xs text-slate-500">Buy Prepaid Cashpower Tokens</div>
+                                        </div>
+                                    </label>
+
+                                    <label class="border rounded-xl p-4 cursor-pointer hover:border-bk-blue transition flex items-center gap-3 border-slate-200">
+                                        <input type="radio" name="utilityType" value="WASAC" class="hidden" onchange="updateUtilityUI()">
+                                        <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-700 flex items-center justify-center font-bold text-lg">
+                                            💧
+                                        </div>
+                                        <div>
+                                            <div class="font-bold text-sm text-slate-800">WASAC Water</div>
+                                            <div class="text-xs text-slate-500">Pay Monthly Water Bills</div>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <div>
+                                    <label id="lbl-meter-num" class="block text-xs font-semibold text-slate-600 mb-1">Meter / Account Number</label>
+                                    <input type="text" id="bill-meter" placeholder="0419-8827-391" required class="w-full p-2.5 bg-blue-50/30 border border-blue-200 rounded-lg text-sm font-mono focus:ring-2 focus:ring-bk-blue">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Amount to Pay (RWF)</label>
+                                    <input type="number" id="bill-amount" placeholder="e.g. 5000" min="500" required class="w-full p-2.5 bg-blue-50/30 border border-blue-200 rounded-lg text-sm font-semibold focus:ring-2 focus:ring-bk-blue">
+                                </div>
+
+                                <div id="token-result" class="hidden p-4 bg-green-50 border border-green-200 rounded-xl text-center space-y-2">
+                                    <div class="text-xs text-green-700 font-medium">Electricity Token Generated Successfully!</div>
+                                    <div id="token-code" class="text-xl font-mono font-extrabold text-green-900 tracking-wider">0482 - 8812 - 9920 - 1102</div>
+                                    <button type="button" onclick="copyToken()" class="text-xs bg-green-200 hover:bg-green-300 text-green-800 px-3 py-1 rounded font-semibold transition">
+                                        <i class="fas fa-copy"></i> Copy Token Code
+                                    </button>
+                                </div>
+
+                                <button type="submit" id="btn-pay-bill" class="w-full bg-bk-blue hover:bg-bk-navy text-white font-bold py-3 rounded-lg shadow transition flex items-center justify-center gap-2">
+                                    <i class="fas fa-check-circle text-bk-yellow"></i> Pay Utility Bill Now
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- TAB 4: BK QUICK LOANS & CARDS -->
+                    <div id="tab-cards" class="hidden space-y-6">
+                        <div class="bg-white rounded-xl shadow-xs border border-blue-100 p-6 space-y-6">
+                            <!-- Virtual Card Display -->
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-sm mb-3">Active Debit Card</h4>
+                                <div class="card-shimmer max-w-sm rounded-2xl p-6 text-white shadow-xl relative overflow-hidden">
+                                    <div class="flex justify-between items-start mb-8">
+                                        <div class="text-xs font-semibold tracking-widest text-bk-yellow uppercase">Bank of Kigali</div>
+                                        <i class="fab fa-cc-visa text-3xl text-white"></i>
+                                    </div>
+                                    <div class="font-mono text-lg tracking-widest mb-6">4582 •••• •••• 9012</div>
+                                    <div class="flex justify-between items-end text-xs">
+                                        <div>
+                                            <div class="text-slate-300 text-[10px]">CARD HOLDER</div>
+                                            <div class="font-semibold uppercase tracking-wider">JEAN-PAUL MUGISHA</div>
+                                        </div>
+                                        <div>
+                                            <div class="text-slate-300 text-[10px]">EXPIRES</div>
+                                            <div class="font-semibold font-mono">08/28</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- BK Quick Micro-loan Widget -->
+                            <div class="border-t border-slate-100 pt-5">
+                                <div class="bg-blue-50/60 p-4 rounded-xl border border-blue-100">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="font-bold text-sm text-bk-navy flex items-center gap-2">
+                                            <i class="fas fa-bolt text-bk-blue"></i> BK Quick Instant Mobile Loan
+                                        </span>
+                                        <span class="text-xs bg-blue-100 text-bk-blue px-2.5 py-0.5 rounded-full font-bold">Approved Pre-limit</span>
+                                    </div>
+                                    <p class="text-xs text-slate-600 mb-3">You are pre-approved for up to <strong>500,000 RWF</strong> instant digital loan directly credited to your checking account.</p>
+                                    <button onclick="requestBkQuick()" class="bg-bk-blue hover:bg-bk-navy text-white font-bold text-xs px-4 py-2 rounded-lg shadow transition">
+                                        Request 100,000 RWF Instant Loan
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer Info inside Dashboard -->
+                    <div class="mt-4 pt-4 border-t border-slate-100 flex justify-between items-center text-xs text-slate-500">
+                        <span><i class="fas fa-shield-alt text-green-600"></i> SSL 256-Bit Encrypted Session</span>
+                        <span>BK Call Center: 4455</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="calculators" class="py-12 bg-blue-50/30 px-4 sm:px-8 border-y border-blue-100">
+            <div class="max-w-7xl mx-auto space-y-8">
+                <div class="text-center max-w-2xl mx-auto">
+                    <span class="text-bk-blue font-bold text-xs uppercase tracking-wider bg-blue-100/80 px-3 py-1 rounded-full border border-blue-200">Financial Tools</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-bk-navy mt-2" data-i18n="calc-heading">Loan & Fixed Deposit Calculators</h2>
+                    <p class="text-slate-600 text-sm mt-1" data-i18n="calc-desc">Plan your mortgage, personal loans, or fixed savings returns with standard BK interest rates.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Personal & Mortgage Loan Calculator -->
+                    <div class="bg-white rounded-2xl shadow-md p-6 border border-blue-100 space-y-6">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                            <h3 class="font-bold text-lg text-bk-navy flex items-center gap-2">
+                                <i class="fas fa-calculator text-bk-blue"></i> BK Personal / Mortgage Loan Calculator
+                            </h3>
+                            <span class="text-xs bg-blue-100 text-bk-blue px-2.5 py-1 rounded-full font-bold">Loan Estimator</span>
+                        </div>
+
+                        <!-- Loan Amount Slider -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-xs font-semibold">
+                                <span class="text-slate-600">Loan Amount (RWF)</span>
+                                <span id="val-loan-amount" class="text-bk-blue font-bold text-sm">15,000,000 RWF</span>
+                            </div>
+                            <input type="range" id="input-loan-amount" min="500000" max="100000000" step="500000" value="15000000" oninput="calculateLoan()" class="w-full accent-bk-blue cursor-pointer">
+                            <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+                                <span>500K RWF</span>
+                                <span>100M RWF</span>
+                            </div>
+                        </div>
+
+                        <!-- Loan Tenure Slider -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-xs font-semibold">
+                                <span class="text-slate-600">Tenure Duration</span>
+                                <span id="val-loan-years" class="text-bk-blue font-bold text-sm">5 Years</span>
+                            </div>
+                            <input type="range" id="input-loan-years" min="1" max="20" step="1" value="5" oninput="calculateLoan()" class="w-full accent-bk-blue cursor-pointer">
+                            <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+                                <span>1 Year</span>
+                                <span>20 Years</span>
+                            </div>
+                        </div>
+
+                        <!-- Interest Rate Slider -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-xs font-semibold">
+                                <span class="text-slate-600">Interest Rate (% p.a)</span>
+                                <span id="val-loan-rate" class="text-bk-blue font-bold text-sm">16.5%</span>
+                            </div>
+                            <input type="range" id="input-loan-rate" min="10" max="22" step="0.5" value="16.5" oninput="calculateLoan()" class="w-full accent-bk-blue cursor-pointer">
+                        </div>
+
+                        <!-- Calculation Summary Cards -->
+                        <div class="grid grid-cols-2 gap-4 bg-blue-50/40 p-4 rounded-xl border border-blue-100">
+                            <div>
+                                <span class="text-xs text-slate-500 block">Monthly Repayment</span>
+                                <span id="res-monthly" class="text-lg font-extrabold text-bk-navy font-mono">368,912 RWF</span>
+                            </div>
+                            <div>
+                                <span class="text-xs text-slate-500 block">Total Interest Payable</span>
+                                <span id="res-total-interest" class="text-lg font-extrabold text-amber-600 font-mono">7,134,720 RWF</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Term Deposit / Fixed Savings Returns Calculator -->
+                    <div class="bg-white rounded-2xl shadow-md p-6 border border-blue-100 space-y-6">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                            <h3 class="font-bold text-lg text-bk-navy flex items-center gap-2">
+                                <i class="fas fa-chart-line text-green-600"></i> BK Term Deposit Investment Earnings
+                            </h3>
+                            <span class="text-xs bg-green-100 text-green-700 px-2.5 py-1 rounded-full font-bold">Growth Simulator</span>
+                        </div>
+
+                        <!-- Principal Amount Slider -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-xs font-semibold">
+                                <span class="text-slate-600">Deposit Principal (RWF)</span>
+                                <span id="val-dep-amount" class="text-green-700 font-bold text-sm">5,000,000 RWF</span>
+                            </div>
+                            <input type="range" id="input-dep-amount" min="100000" max="50000000" step="100000" value="5000000" oninput="calculateDeposit()" class="w-full accent-green-600 cursor-pointer">
+                        </div>
+
+                        <!-- Deposit Tenure (Months) -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-xs font-semibold">
+                                <span class="text-slate-600">Lock-in Period</span>
+                                <span id="val-dep-months" class="text-green-700 font-bold text-sm">12 Months</span>
+                            </div>
+                            <input type="range" id="input-dep-months" min="3" max="36" step="3" value="12" oninput="calculateDeposit()" class="w-full accent-green-600 cursor-pointer">
+                        </div>
+
+                        <!-- Yield Rate display -->
+                        <div class="p-3 bg-green-50/60 rounded-lg text-xs text-green-800 flex justify-between items-center border border-green-100">
+                            <span>Applicable Rate Tier:</span>
+                            <span id="val-dep-rate" class="font-bold">8.5% p.a</span>
+                        </div>
+
+                        <!-- Result Summary -->
+                        <div class="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <div>
+                                <span class="text-xs text-slate-500 block">Total Interest Earned</span>
+                                <span id="res-dep-interest" class="text-lg font-extrabold text-green-600 font-mono">425,000 RWF</span>
+                            </div>
+                            <div>
+                                <span class="text-xs text-slate-500 block">Maturity Value</span>
+                                <span id="res-dep-total" class="text-lg font-extrabold text-bk-navy font-mono">5,425,000 RWF</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="services" class="py-16 px-4 sm:px-8 max-w-7xl mx-auto">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="text-bk-blue font-bold text-xs uppercase tracking-wider bg-blue-100/70 px-3 py-1 rounded-full border border-blue-200">Tailored Solutions</span>
+                <h2 class="text-2xl sm:text-4xl font-extrabold text-bk-navy mt-2" data-i18n="prod-heading">Bank of Kigali Core Products</h2>
+                <p class="text-slate-600 text-sm mt-2" data-i18n="prod-desc">Innovative corporate and retail banking services designed to empower individuals and businesses in Rwanda.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-white rounded-2xl p-6 shadow-md border border-blue-100 hover:shadow-xl transition duration-300 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-blue-50 text-bk-blue flex items-center justify-center text-2xl font-bold border border-blue-100">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-bk-navy">Debit & Credit Cards</h3>
+                        <p class="text-slate-600 text-xs leading-relaxed">
+                            Enjoy contactless payments across Rwanda and globally with BK Visa and Mastercard debit and gold credit cards.
+                        </p>
+                    </div>
+                    <ul class="text-xs space-y-2 text-slate-600 my-4 pt-4 border-t border-slate-100">
+                        <li class="flex items-center gap-2"><i class="fas fa-check text-bk-blue"></i> International Online Payments</li>
+                        <li class="flex items-center gap-2"><i class="fas fa-check text-bk-blue"></i> Instant ATM Cash Withdrawals</li>
+                    </ul>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white rounded-2xl p-6 shadow-md border border-blue-100 hover:shadow-xl transition duration-300 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-blue-50 text-bk-blue flex items-center justify-center text-2xl font-bold border border-blue-100">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-bk-navy">BK Quick Digital Loans</h3>
+                        <p class="text-slate-600 text-xs leading-relaxed">
+                            Access emergency micro-loans instantly on your mobile phone without paperwork or visiting a branch.
+                        </p>
+                    </div>
+                    <ul class="text-xs space-y-2 text-slate-600 my-4 pt-4 border-t border-slate-100">
+                        <li class="flex items-center gap-2"><i class="fas fa-check text-bk-blue"></i> Instant Approval in 30 Seconds</li>
+                        <li class="flex items-center gap-2"><i class="fas fa-check text-bk-blue"></i> Integrated with USSD *241#</li>
+                    </ul>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white rounded-2xl p-6 shadow-md border border-blue-100 hover:shadow-xl transition duration-300 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="w-12 h-12 rounded-xl bg-blue-50 text-bk-blue flex items-center justify-center text-2xl font-bold border border-blue-100">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-bk-navy">Mortgage & Agribusiness</h3>
+                        <p class="text-slate-600 text-xs leading-relaxed">
+                            Tailored home financing loans and agricultural support facilities to grow local production and infrastructure.
+                        </p>
+                    </div>
+                    <ul class="text-xs space-y-2 text-slate-600 my-4 pt-4 border-t border-slate-100">
+                        <li class="flex items-center gap-2"><i class="fas fa-check text-bk-blue"></i> Flexible Up to 20-Year Tenures</li>
+                        <li class="flex items-center gap-2"><i class="fas fa-check text-bk-blue"></i> Competitive Local Interest Rates</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="bg-blue-50/80 text-slate-800 py-12 px-4 sm:px-8 border-t border-blue-100">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <div class="flex items-center gap-2 font-bold text-xl mb-3 text-bk-navy">
+                        <div class="w-8 h-8 bg-bk-blue text-white rounded flex items-center justify-center font-extrabold text-sm shadow">BK</div>
+                        <span>Bank of Kigali</span>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                        Headquarters: KN 4 Ave, Kigali, Rwanda.<br>
+                        P.O. Box 175 Kigali, Rwanda.
+                    </p>
+                    <div class="text-xs text-bk-blue font-bold">
+                        Toll Free Line: 4455 | Email: bk@bk.rw
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-sm mb-3 text-bk-blue">Quick Branches in Kigali</h4>
+                    <ul class="text-xs space-y-2 text-slate-600">
+                        <li><i class="fas fa-map-marker-alt text-bk-blue mr-1"></i> BK HQ Branch - KN 4 Ave</li>
+                        <li><i class="fas fa-map-marker-alt text-bk-blue mr-1"></i> Remera Branch - Near Giporoso</li>
+                        <li><i class="fas fa-map-marker-alt text-bk-blue mr-1"></i> Nyarugenge / Market Branch</li>
+                        <li><i class="fas fa-map-marker-alt text-bk-blue mr-1"></i> Kacyiru Branch - Near Ministries</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-sm mb-3 text-bk-blue">Digital Mobile Apps</h4>
+                    <p class="text-xs text-slate-600 mb-3">Download the official BK Mobile App on Android and iOS devices.</p>
+                    <div class="flex gap-2">
+                        <span class="bg-white text-xs px-3 py-2 rounded-lg border border-blue-200 text-bk-navy font-semibold flex items-center gap-2 shadow-xs">
+                            <i class="fab fa-google-play text-lg text-bk-blue"></i> Google Play
+                        </span>
+                        <span class="bg-white text-xs px-3 py-2 rounded-lg border border-blue-200 text-bk-navy font-semibold flex items-center gap-2 shadow-xs">
+                            <i class="fab fa-apple text-lg text-bk-blue"></i> App Store
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-white text-slate-500 py-6 text-center text-xs px-4 border-t border-blue-100">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
+            <p>© 2026 Bank of Kigali Plc. Licensed & Regulated by National Bank of Rwanda (BNR).</p>
+            <div class="flex gap-4 font-medium">
+                <a href="#" class="hover:text-bk-blue">Privacy Policy</a>
+                <a href="#" class="hover:text-bk-blue">Terms of Service</a>
+                <a href="#" class="hover:text-bk-blue">Security Notice</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Deposit Simulation Modal -->
+    <div id="deposit-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative text-slate-800 border border-blue-100">
+            <button onclick="closeDepositModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 text-xl">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="text-lg font-bold text-bk-navy mb-2 flex items-center gap-2">
+                <i class="fas fa-plus-circle text-green-600"></i> Simulate Cash Deposit
+            </h3>
+            <p class="text-xs text-slate-500 mb-4">Add dummy test funds to your checking or savings account balance.</p>
+
+            <form onsubmit="handleDepositSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Target Account</label>
+                    <select id="deposit-target" class="w-full p-2.5 bg-blue-50/30 border border-blue-200 rounded-lg text-sm font-medium">
+                        <option value="checking">Checking Account</option>
+                        <option value="savings">Savings Account</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Deposit Amount (RWF)</label>
+                    <input type="number" id="deposit-amount" placeholder="e.g. 100000" min="1000" required class="w-full p-2.5 bg-blue-50/30 border border-blue-200 rounded-lg text-sm font-semibold">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Deposit Source</label>
+                    <input type="text" id="deposit-source" value="Branch Counter Cash Deposit" class="w-full p-2.5 bg-blue-50/30 border border-blue-200 rounded-lg text-sm">
+                </div>
+                <button type="submit" class="w-full bg-bk-blue hover:bg-bk-navy text-white font-bold py-3 rounded-lg shadow transition">
+                    Confirm Cash Deposit
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // State variables
+        let balances = {
+            checking: 820500,
+            savings: 3450000
+        };
+
+        let transactions = [
+            { id: 1, title: 'Salary Credit - Bank of Kigali', type: 'income', amount: 450000, date: '2026-09-24', category: 'Salary' },
+            { id: 2, title: 'EUCL Electricity Token Purchase', type: 'expense', amount: 15000, date: '2026-09-22', category: 'Utilities' },
+            { id: 3, title: 'MTN Mobile Money Transfer', type: 'expense', amount: 35000, date: '2026-09-20', category: 'Transfer' },
+            { id: 4, title: 'Savings Interest Yield', type: 'income', amount: 12500, date: '2026-09-15', category: 'Interest' }
+        ];
+
+        // i18n Translations Dictionary
+        const translations = {
+            en: {
+                'nav-home': 'Home',
+                'nav-dashboard': 'Internet Banking',
+                'nav-calculators': 'Calculators',
+                'nav-services': 'Products & Services',
+                'nav-contact': 'Contact',
+                'btn-login': 'BK Internet Banking',
+                'hero-tag': "Rwanda's Leading Financial Partner",
+                'hero-title': 'Banking Made Simple, Fast & Secure',
+                'hero-desc': 'Manage your accounts, transfer money instantly across Rwanda via BK Quick or Mobile Money (MTN MoMo & Airtel Money), pay utilities, and apply for digital loans seamlessly.',
+                'hero-f1': 'BK Mobile App',
+                'hero-f2': 'BK Quick Loans',
+                'hero-f3': 'MoMo & Airtel Link',
+                'hero-f4': '256-bit Security',
+                'hero-btn-demo': 'Launch Interactive Simulator',
+                'hero-btn-calc': 'Explore Loan Calculator',
+                'fx-title': 'BK Forex Rate Converter',
+                'fx-amount': 'Amount in Rwandan Francs (RWF)',
+                'dash-badge': 'Interactive Banking Portal',
+                'dash-heading': 'Bank of Kigali Online Customer Portal',
+                'tab-overview': 'Account Overview',
+                'tab-transfers': 'Transfer & Pay',
+                'tab-bills': 'Utilities & EUCL',
+                'tab-cards': 'My Cards & BK Quick',
+                'calc-heading': 'Loan & Fixed Deposit Calculators',
+                'calc-desc': 'Plan your mortgage, personal loans, or fixed savings returns with standard BK interest rates.',
+                'prod-heading': 'Bank of Kigali Core Products',
+                'prod-desc': 'Innovative corporate and retail banking services designed to empower individuals and businesses in Rwanda.'
+            },
+            rw: {
+                'nav-home': 'Ahabanza',
+                'nav-dashboard': 'Koresha Banki Cyane',
+                'nav-calculators': 'Abarira Inguframe',
+                'nav-services': 'Serivisi Zacu',
+                'nav-contact': 'Tuvugishe',
+                'btn-login': 'Injira mu Banki',
+                'hero-tag': 'Umufatanyabikorwa wa Mbere mu Rwanda',
+                'hero-title': 'Koresha Banki mu Bwihuse n\'Umutekano',
+                'hero-desc': 'Ohereza amafaranga kuri MTN MoMo cyane na Airtel Money, wishyure EUCL/WASAC, utange ubusabe bw\'inguframe mu buryo bworoshye.',
+                'hero-f1': 'BK Mobile App',
+                'hero-f2': 'BK Quick Inguframe',
+                'hero-f3': 'MoMo & Airtel Link',
+                'hero-f4': 'Umutekano Wujuje Ubuziranenge',
+                'hero-btn-demo': 'Fungura Koresha Demo',
+                'hero-btn-calc': 'Bara Inguframe',
+                'fx-title': 'Igipimo cy\'Ivvunjisha BK',
+                'fx-amount': 'Amafaranga y\'u Rwanda (RWF)',
+                'dash-badge': 'Ikaze kuri Banki ya Kigali',
+                'dash-heading': 'Icyapa cy\'Amaso y\'Amapaji ya BK',
+                'tab-overview': 'Inshamake y\'Akarita',
+                'tab-transfers': 'Ohereza & Ishyura',
+                'tab-bills': 'Amazi & Amashanyarazi',
+                'tab-cards': 'Amakarita & BK Quick',
+                'calc-heading': 'Kuba Inguframe n\'Inyungu',
+                'calc-desc': 'Bara inguzanyo yo kugura inzu cyane inguzanyo y kibina mu buryo bworoshye.',
+                'prod-heading': 'Serivisi Z\'Ingenzi za BK',
+                'prod-desc': 'Serivisi za banki zikoreshwa cyane zagenewe abantu ku giti cyabo n\'ibigo.'
+            },
+            fr: {
+                'nav-home': 'Accueil',
+                'nav-dashboard': 'Banque en Ligne',
+                'nav-calculators': 'Calculateurs',
+                'nav-services': 'Produits & Services',
+                'nav-contact': 'Contact',
+                'btn-login': 'Connexion BK',
+                'hero-tag': 'Partenaire Financier Majeur au Rwanda',
+                'hero-title': 'La Banque Simple, Rapide & Sécurisée',
+                'hero-desc': 'Gérez vos comptes, transférez de l\'argent via BK Quick ou Mobile Money (MTN & Airtel), payez vos factures et obtenez des crédits digitaux.',
+                'hero-f1': 'Application BK',
+                'hero-f2': 'Crédit BK Quick',
+                'hero-f3': 'Lien MoMo & Airtel',
+                'hero-f4': 'Sécurité 256-bit',
+                'hero-btn-demo': 'Lancer le Simulateur',
+                'hero-btn-calc': 'Calculer un Prêt',
+                'fx-title': 'Convertisseur de Devises BK',
+                'fx-amount': 'Montant en Francs Rwandais (RWF)',
+                'dash-badge': 'Portail Bancaire Interactif',
+                'dash-heading': 'Portail Client Bank of Kigali',
+                'tab-overview': 'Aperçu du Compte',
+                'tab-transfers': 'Virement & Paiement',
+                'tab-bills': 'Factures & Électricité',
+                'tab-cards': 'Cartes & BK Quick',
+                'calc-heading': 'Calculateurs de Prêt et Dépôts',
+                'calc-desc': 'Simulez vos remboursements de prêt hypothécaire ou vos gains d\'épargne.',
+                'prod-heading': 'Produits Phares Bank of Kigali',
+                'prod-desc': 'Des solutions bancaires innovantes pour les particuliers et entreprises au Rwanda.'
+            }
+        };
+
+        // DOM Initialization
+        window.onload = function() {
+            renderBalances();
+            renderTransactions();
+            calculateFX();
+            calculateLoan();
+            calculateDeposit();
+        };
+
+        // Scroll helper
+        function scrollToSection(id) {
+            document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Toggle mobile drawer
+        function toggleMobileNav() {
+            const drawer = document.getElementById('mobile-drawer');
+            drawer.classList.toggle('hidden');
+        }
+
+        // Dynamic Language Switching
+        function changeLanguage(lang) {
+            const dict = translations[lang] || translations.en;
+            for (const key in dict) {
+                const elems = document.querySelectorAll(`[data-i18n="${key}"]`);
+                elems.forEach(el => {
+                    el.innerText = dict[key];
+                });
+            }
+            showToast(`Language set to ${lang.toUpperCase()}`, 'info');
+        }
+
+        // Account Switcher (Retail vs Corporate)
+        function setAccountType(type) {
+            const btnRetail = document.getElementById('btn-acc-retail');
+            const btnCorp = document.getElementById('btn-acc-corp');
+            const nameEl = document.getElementById('dash-user-name');
+            const accEl = document.getElementById('dash-user-acc');
+            const modeLabel = document.getElementById('label-mode');
+
+            if (type === 'retail') {
+                btnRetail.className = "px-3 py-1.5 rounded-lg font-semibold bg-bk-navy text-white transition-all";
+                btnCorp.className = "px-3 py-1.5 rounded-lg font-semibold text-gray-600 hover:bg-gray-100 transition-all";
+                nameEl.innerText = "Jean-Paul Mugisha";
+                accEl.innerText = "Acc: 00012-083746-01";
+                modeLabel.innerText = "Retail Banking";
+                balances = { checking: 820500, savings: 3450000 };
+            } else {
+                btnCorp.className = "px-3 py-1.5 rounded-lg font-semibold bg-bk-navy text-white transition-all";
+                btnRetail.className = "px-3 py-1.5 rounded-lg font-semibold text-gray-600 hover:bg-gray-100 transition-all";
+                nameEl.innerText = "Kigali Logistics Ltd";
+                accEl.innerText = "Corp Acc: 00001-992812-09";
+                modeLabel.innerText = "Corporate Enterprise";
+                balances = { checking: 45200000, savings: 120500000 };
+            }
+            renderBalances();
+            showToast(`Switched to ${type === 'retail' ? 'Retail Banking' : 'Corporate Enterprise'} Mode`, 'info');
+        }
+
+        // Tab Switching
+        function switchTab(tabId) {
+            ['tab-overview', 'tab-transfers', 'tab-bills', 'tab-cards'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(tabId).classList.remove('hidden');
+
+            ['nav-tab-overview', 'nav-tab-transfers', 'nav-tab-bills', 'nav-tab-cards'].forEach(id => {
+                const navBtn = document.getElementById(id);
+                navBtn.className = "w-full flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm text-slate-600 hover:bg-white hover:text-bk-blue transition";
+            });
+
+            const activeBtn = document.getElementById('nav-' + tabId);
+            if (activeBtn) {
+                activeBtn.className = "w-full flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm transition bg-bk-blue text-white shadow-md";
+            }
+        }
+
+        // Render Balances
+        function renderBalances() {
+            document.getElementById('bal-savings').innerText = balances.savings.toLocaleString() + ' RWF';
+            document.getElementById('bal-checking').innerText = balances.checking.toLocaleString() + ' RWF';
+        }
+
+        // Render Transactions List
+        function renderTransactions(filter = 'all') {
+            const container = document.getElementById('tx-list');
+            container.innerHTML = '';
+
+            const filtered = transactions.filter(t => filter === 'all' || t.type === filter);
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="py-6 text-center text-xs text-gray-400">No transactions found for this filter.</div>`;
+                return;
+            }
+
+            filtered.forEach(tx => {
+                const isIncome = tx.type === 'income';
+                const html = `
+                    <div class="py-3 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-full ${isIncome ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'} flex items-center justify-center text-xs font-bold">
+                                <i class="fas ${isIncome ? 'fa-arrow-down' : 'fa-arrow-up'}"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs font-bold text-gray-800">${tx.title}</div>
+                                <div class="text-[10px] text-gray-400">${tx.date} • ${tx.category}</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xs font-bold font-mono ${isIncome ? 'text-green-600' : 'text-red-600'}">
+                                ${isIncome ? '+' : '-'}${tx.amount.toLocaleString()} RWF
+                            </div>
+                            <span class="text-[9px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">Completed</span>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        function filterTx(type) {
+            ['all', 'income', 'expense'].forEach(t => {
+                const btn = document.getElementById('tx-filter-' + t);
+                if (t === type) {
+                    btn.className = "px-2.5 py-1 rounded-md font-semibold bg-white shadow-xs text-bk-navy";
+                } else {
+                    btn.className = "px-2.5 py-1 rounded-md font-semibold text-gray-600 hover:text-bk-navy";
+                }
+            });
+            renderTransactions(type);
+        }
+
+        // Currency Converter Logic
+        function calculateFX() {
+            const amountRWF = parseFloat(document.getElementById('fx-amount').value) || 0;
+            const usdRate = 1360;
+            const eurRate = 1480;
+            const gbpRate = 1750;
+
+            document.getElementById('fx-usd').innerText = '$ ' + (amountRWF / usdRate).toFixed(2);
+            document.getElementById('fx-eur').innerText = '€ ' + (amountRWF / eurRate).toFixed(2);
+            document.getElementById('fx-gbp').innerText = '£ ' + (amountRWF / gbpRate).toFixed(2);
+        }
+
+        // Form Logic: Transfers
+        function updateTransferUI() {
+            const type = document.querySelector('input[name="transferType"]:checked').value;
+            const lbl = document.getElementById('lbl-transfer-target');
+            const targetInput = document.getElementById('transfer-target');
+
+            if (type === 'BK') {
+                lbl.innerText = "Recipient BK Account Number";
+                targetInput.placeholder = "00012-987654-02";
+            } else if (type === 'MoMo') {
+                lbl.innerText = "Recipient MTN Mobile Number";
+                targetInput.placeholder = "+250 788 123 456";
+            } else {
+                lbl.innerText = "Recipient Airtel Phone Number";
+                targetInput.placeholder = "+250 733 987 654";
+            }
+        }
+
+        function handleTransferSubmit(e) {
+            e.preventDefault();
+            const fromAcc = document.getElementById('transfer-from').value;
+            const amount = parseFloat(document.getElementById('transfer-amount').value);
+            const target = document.getElementById('transfer-target').value;
+            const ref = document.getElementById('transfer-ref').value || 'Transfer';
+            const type = document.querySelector('input[name="transferType"]:checked').value;
+
+            if (balances[fromAcc] < amount) {
+                showToast("Insufficient balance for this transaction!", "error");
+                return;
+            }
+
+            balances[fromAcc] -= amount;
+            renderBalances();
+
+            transactions.unshift({
+                id: Date.now(),
+                title: `${type} Transfer to ${target}`,
+                type: 'expense',
+                amount: amount,
+                date: new Date().toISOString().split('T')[0],
+                category: ref
+            });
+
+            renderTransactions();
+            document.getElementById('transfer-amount').value = '';
+            showToast(`Successfully transferred ${amount.toLocaleString()} RWF to ${target}!`, 'success');
+        }
+
+        // Form Logic: Utility Payments
+        function updateUtilityUI() {
+            const type = document.querySelector('input[name="utilityType"]:checked').value;
+            const lbl = document.getElementById('lbl-meter-num');
+            const meterInput = document.getElementById('bill-meter');
+
+            if (type === 'EUCL') {
+                lbl.innerText = "EUCL Cashpower Meter Number";
+                meterInput.placeholder = "0419-8827-391";
+            } else {
+                lbl.innerText = "WASAC Water Account ID";
+                meterInput.placeholder = "W-991204-8";
+            }
+            document.getElementById('token-result').classList.add('hidden');
+        }
+
+        function handleBillSubmit(e) {
+            e.preventDefault();
+            const type = document.querySelector('input[name="utilityType"]:checked').value;
+            const amount = parseFloat(document.getElementById('bill-amount').value);
+            const meter = document.getElementById('bill-meter').value;
+
+            if (balances.checking < amount) {
+                showToast("Insufficient checking balance for utility payment!", "error");
+                return;
+            }
+
+            balances.checking -= amount;
+            renderBalances();
+
+            if (type === 'EUCL') {
+                const token = `${Math.floor(1000+Math.random()*9000)} - ${Math.floor(1000+Math.random()*9000)} - ${Math.floor(1000+Math.random()*9000)} - ${Math.floor(1000+Math.random()*9000)}`;
+                document.getElementById('token-code').innerText = token;
+                document.getElementById('token-result').classList.remove('hidden');
+            }
+
+            transactions.unshift({
+                id: Date.now(),
+                title: `${type} Payment (${meter})`,
+                type: 'expense',
+                amount: amount,
+                date: new Date().toISOString().split('T')[0],
+                category: 'Utilities'
+            });
+
+            renderTransactions();
+            showToast(`${type} Bill Payment of ${amount.toLocaleString()} RWF Successful!`, 'success');
+        }
+
+        function copyToken() {
+            const tokenText = document.getElementById('token-code').innerText;
+            const tempInput = document.createElement('input');
+            tempInput.value = tokenText;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showToast("EUCL Token copied to clipboard!", "success");
+        }
+
+        // BK Quick Request
+        function requestBkQuick() {
+            const amount = 100000;
+            balances.checking += amount;
+            renderBalances();
+
+            transactions.unshift({
+                id: Date.now(),
+                title: 'BK Quick Micro-Loan Credit',
+                type: 'income',
+                amount: amount,
+                date: new Date().toISOString().split('T')[0],
+                category: 'Digital Loan'
+            });
+
+            renderTransactions();
+            showToast("BK Quick Loan of 100,000 RWF disbursed into your account!", "success");
+        }
+
+        // Deposit Modal Logic
+        function openDepositModal() {
+            document.getElementById('deposit-modal').classList.remove('hidden');
+        }
+
+        function closeDepositModal() {
+            document.getElementById('deposit-modal').classList.add('hidden');
+        }
+
+        function handleDepositSubmit(e) {
+            e.preventDefault();
+            const targetAcc = document.getElementById('deposit-target').value;
+            const amount = parseFloat(document.getElementById('deposit-amount').value);
+            const source = document.getElementById('deposit-source').value || 'Cash Deposit';
+
+            balances[targetAcc] += amount;
+            renderBalances();
+
+            transactions.unshift({
+                id: Date.now(),
+                title: `Deposit - ${source}`,
+                type: 'income',
+                amount: amount,
+                date: new Date().toISOString().split('T')[0],
+                category: 'Deposit'
+            });
+
+            renderTransactions();
+            closeDepositModal();
+            document.getElementById('deposit-amount').value = '';
+            showToast(`Successfully deposited ${amount.toLocaleString()} RWF!`, 'success');
+        }
+
+        function resetDemoData() {
+            balances = { checking: 820500, savings: 3450000 };
+            renderBalances();
+            showToast("Simulator data reset to original defaults.", "info");
+        }
+
+        // Calculators Logic
+        function calculateLoan() {
+            const P = parseFloat(document.getElementById('input-loan-amount').value);
+            const years = parseInt(document.getElementById('input-loan-years').value);
+            const rAnnual = parseFloat(document.getElementById('input-loan-rate').value);
+
+            document.getElementById('val-loan-amount').innerText = P.toLocaleString() + ' RWF';
+            document.getElementById('val-loan-years').innerText = years + (years === 1 ? ' Year' : ' Years');
+            document.getElementById('val-loan-rate').innerText = rAnnual.toFixed(1) + '%';
+
+            const rMonthly = (rAnnual / 100) / 12;
+            const nMonths = years * 12;
+
+            // Monthly Payment Formula: M = P * (r(1+r)^n) / ((1+r)^n - 1)
+            const M = (P * rMonthly * Math.pow(1 + rMonthly, nMonths)) / (Math.pow(1 + rMonthly, nMonths) - 1);
+            const totalRepayment = M * nMonths;
+            const totalInterest = totalRepayment - P;
+
+            document.getElementById('res-monthly').innerText = Math.round(M).toLocaleString() + ' RWF';
+            document.getElementById('res-total-interest').innerText = Math.round(totalInterest).toLocaleString() + ' RWF';
+        }
+
+        function calculateDeposit() {
+            const principal = parseFloat(document.getElementById('input-dep-amount').value);
+            const months = parseInt(document.getElementById('input-dep-months').value);
+            
+            // Tiered interest rate based on tenure
+            let rate = 6.5;
+            if (months >= 12) rate = 8.5;
+            if (months >= 24) rate = 10.0;
+
+            document.getElementById('val-dep-amount').innerText = principal.toLocaleString() + ' RWF';
+            document.getElementById('val-dep-months').innerText = months + ' Months';
+            document.getElementById('val-dep-rate').innerText = rate.toFixed(1) + '% p.a';
+
+            const interestEarned = principal * (rate / 100) * (months / 12);
+            const maturityTotal = principal + interestEarned;
+
+            document.getElementById('res-dep-interest').innerText = Math.round(interestEarned).toLocaleString() + ' RWF';
+            document.getElementById('res-dep-total').innerText = Math.round(maturityTotal).toLocaleString() + ' RWF';
+        }
+
+        // Custom Toast Notifications
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let bgClass = 'bg-bk-navy text-white border-bk-yellow';
+            let icon = 'fa-info-circle text-bk-yellow';
+
+            if (type === 'success') {
+                bgClass = 'bg-green-900 text-white border-green-400';
+                icon = 'fa-check-circle text-green-400';
+            } else if (type === 'error') {
+                bgClass = 'bg-red-900 text-white border-red-400';
+                icon = 'fa-exclamation-triangle text-red-400';
+            }
+
+            toast.className = `toast-animate p-4 rounded-xl shadow-2xl border-l-4 ${bgClass} flex items-center justify-between text-xs font-medium pointer-events-auto`;
+            toast.innerHTML = `
+                <div class="flex items-center gap-2">
+                    <i class="fas ${icon} text-base"></i>
+                    <span>${message}</span>
+                </div>
+                <button onclick="this.parentElement.remove()" class="ml-3 text-gray-300 hover:text-white">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+
+            container.appendChild(toast);
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.remove();
+                }
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
